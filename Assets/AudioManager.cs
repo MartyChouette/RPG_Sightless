@@ -1,26 +1,27 @@
+using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    public AudioSource sfxSource;
-
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    public void Play(AudioClip clip)
+    public void PlayOneShot(string eventPath)
     {
-        sfxSource.PlayOneShot(clip);
+        RuntimeManager.PlayOneShot(eventPath);
+    }
+
+    public void PlayOneShotWithParam(string eventPath, string paramName, float paramValue)
+    {
+        var instance = RuntimeManager.CreateInstance(eventPath);
+        instance.setParameterByName(paramName, paramValue);
+        instance.start();
+        instance.release();
     }
 }
